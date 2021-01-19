@@ -13,8 +13,7 @@ import java.io.IOException;
 @WebServlet("/users/edit")
 public class EditUser extends HttpServlet {
     private static UserDao userDao = new UserDao();
-    private String edit = "/user/edit.jsp";
-
+    private String editPage = "/user/edit.jsp";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -42,7 +41,7 @@ public class EditUser extends HttpServlet {
             userDao.update(new User(id, email, userName, password));
             response.sendRedirect("/users/list");
         } else {
-            request.getServletContext().getRequestDispatcher(this.edit).forward(request, response);
+            request.getServletContext().getRequestDispatcher(editPage).forward(request, response);
         }
     }
 
@@ -50,7 +49,7 @@ public class EditUser extends HttpServlet {
         String id = request.getParameter("id");
         request.setAttribute("editUser", userDao.read(Integer.parseInt(id)));
         request.setAttribute("title", "Edit user");
-        request.getServletContext().getRequestDispatcher(edit).forward(request, response);
+        request.getServletContext().getRequestDispatcher(editPage).forward(request, response);
 
     }
 
