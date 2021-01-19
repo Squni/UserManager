@@ -27,7 +27,7 @@ public class Register extends HttpServlet {
             create = false;
         }
         if (create) {
-            AddUser.createUser(email, userName, password);
+            AddUser.createUser( userName, email, password);
             response.sendRedirect("/login");
         } else {
             request.getServletContext().getRequestDispatcher("/auth/register.jsp").forward(request, response);

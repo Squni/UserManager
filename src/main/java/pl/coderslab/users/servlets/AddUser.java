@@ -32,7 +32,7 @@ public class AddUser extends HttpServlet {
             create = false;
         }
         if (create) {
-            createUser(email, userName, password);
+            createUser( userName, email, password);
             response.sendRedirect(add);
         } else {
             request.getServletContext().getRequestDispatcher(add).forward(request, response);
