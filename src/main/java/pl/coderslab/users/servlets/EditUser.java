@@ -12,7 +12,9 @@ import java.io.IOException;
 
 @WebServlet("/users/edit")
 public class EditUser extends HttpServlet {
-    UserDao userDao = new UserDao();
+    private static UserDao userDao = new UserDao();
+    private String edit = "/user/edit.jsp";
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -21,44 +23,44 @@ public class EditUser extends HttpServlet {
         String password = request.getParameter("password");
         String newPassword = request.getParameter("newPassword");
         String passwordConf = request.getParameter("passwordConf");
+        boolean edit = true;
 
-        if (!inUse(id, userName, email).equals("")) {
-            request.setAttribute("cannotEdit", inUse(id, userName, email) + " already in use.");
-            request.getServletContext().getRequestDispatcher("/user/edit.jsp").forward(request, response);
-        } else {
-            if (!newPassword.equals(passwordConf)) {
-                request.setAttribute("cannotEdit", "Password doesn't match.");
-                request.getServletContext().getRequestDispatcher("/user/edit.jsp").forward(request, response);
-            } else if (!newPassword.equals("")){
-                password = newPassword;
-            }
+        if (emailInUse(email)) {
+            request.setAttribute("notCreate", "Email already in use.");
+            edit = false;
+        } else if (nameInUse(userName)) {
+            request.setAttribute("notCreate", "Username already in use.");
+            edit = false;
+        } else if (!newPassword.equals(passwordConf)) {
+            request.setAttribute("notCreate", "Password doesn't match.");
+            edit = false;
+        }
+        if (!newPassword.equals("")) {
+            password = newPassword;
+        }
+        if (edit) {
             userDao.update(new User(id, email, userName, password));
             response.sendRedirect("/users/list");
+        } else {
+            request.getServletContext().getRequestDispatcher(this.edit).forward(request, response);
         }
     }
-
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
         request.setAttribute("editUser", userDao.read(Integer.parseInt(id)));
-        request.getServletContext().getRequestDispatcher("/user/edit.jsp").forward(request, response);
-
+        request.setAttribute("title", "Edit user");
+        request.getServletContext().getRequestDispatcher(edit).forward(request, response);
 
     }
 
-    public String inUse(int id, String userName, String email) {
-        User[] users = userDao.findAll();
-        for (User user : users) {
-            if (user.getId() != id) {
-                if (user.getUserName().equals(userName)) {
-                    return "Username";
-                } else if (user.getEmail().equals(email)) {
-                    return "Email";
-                }
-            }
-        }
-        return "";
+    public static boolean nameInUse(String userName) {
+        return userDao.usernameExists(userName);
     }
 
+    public static boolean emailInUse(String email) {
+        return userDao.usernameExists(email);
+    }
 }
+
 

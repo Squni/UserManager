@@ -1,6 +1,5 @@
 package pl.coderslab.users.servlets;
 
-import pl.coderslab.users.entity.User;
 import pl.coderslab.users.entity.UserDao;
 
 import javax.servlet.ServletException;
@@ -12,10 +11,6 @@ import java.io.IOException;
 
 @WebServlet("/users/delete")
 public class DeleteUser extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
         UserDao uDao = new UserDao();

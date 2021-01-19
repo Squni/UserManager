@@ -12,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>userCRUD - Register</title>
+    <title>userCRUD - ${title}</title>
 
     <!-- Custom fonts for this template-->
     <link href="<c:url value="/theme/vendor/fontawesome-free/css/all.min.css"/>" rel="stylesheet" type="text/css">
@@ -39,7 +39,7 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
-                        <c:if test="${notCreate != null}"><font color="red">${notCreate}<br/><br/></font></c:if>
+                        <div style="color:Red"><c:if test="${notCreate != null}">${notCreate}<br/><br/></c:if></div>
                         <form method="post" class="user">
                             <div class="form-group row">
                                 <input type="text" class="form-control form-control-user" name="userName"

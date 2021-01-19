@@ -9,11 +9,8 @@ import java.io.IOException;
 
 @WebServlet("/home")
 public class Home extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getServletContext().getRequestDispatcher("/index.jsp").forward(request,response);
+        request.setAttribute("title", "Home page");
+        request.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }

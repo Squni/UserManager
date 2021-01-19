@@ -12,49 +12,41 @@ import java.io.IOException;
 
 @WebServlet("/users/add")
 public class AddUser extends HttpServlet {
+    String add = "/user/add.jsp";
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userName = request.getParameter("userName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String passwordConf = request.getParameter("passwordConf");
+        boolean create = true;
 
-        if (!password.equals(passwordConf) || password == null) {
-            request.setAttribute("cannotCreate", "Password doesn't match.");
-        } else {
-            String check = doExists(userName, email);
-            if (!check.equals("")) {
-                request.setAttribute("cannotCreate", check + " already in use.");
-            } else {
-                createUser(userName,email,password);
-                request.setAttribute("userCreated", "User successfully created.");
-            }
+        if (EditUser.emailInUse(email)) {
+            request.setAttribute("notCreate", "Email already in use.");
+            create = false;
+        } else if (EditUser.nameInUse(userName)) {
+            request.setAttribute("notCreate", "Username already in use.");
+            create = false;
+        } else if (!password.equals(passwordConf) || password == null) {
+            request.setAttribute("notCreate", "Password doesn't match.");
+            create = false;
         }
-        request.getServletContext().getRequestDispatcher("/user/add.jsp").forward(request, response);
-
+        if (create) {
+            createUser(email, userName, password);
+            response.sendRedirect(add);
+        } else {
+            request.getServletContext().getRequestDispatcher(add).forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getServletContext().getRequestDispatcher("/user/add.jsp").forward(request, response);
-
-
-    }
-
-    public static String doExists(String userName, String email) {
-        UserDao uDao = new UserDao();
-        User[] users = uDao.findAll();
-        for (User user : users) {
-            if (user.getUserName().equals(userName)) {
-                return "Username";
-            } else if (user.getEmail().equals(email)) {
-                return "Email";
-            }
-        }
-        return "";
+        request.setAttribute("title", "Create user");
+        request.getServletContext().getRequestDispatcher(add).forward(request, response);
     }
 
     public static void createUser(String userName, String email, String password) {
         UserDao uDao = new UserDao();
-        uDao.create(new User(email,userName,password));
+        uDao.create(new User(email, userName, password));
     }
 
 }

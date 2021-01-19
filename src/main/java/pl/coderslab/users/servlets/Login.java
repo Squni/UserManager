@@ -28,7 +28,8 @@ public class Login extends HttpServlet {
                     if (user.getPermission().equals("admin")) {
                         session.setAttribute("permission", 1);
                     }
-                    response.sendRedirect("/index.jsp");
+                    request.setAttribute("showUser", userDao.read(user.getId()));
+                    response.sendRedirect("/index.jsp"); //TODO: Forward user info to /index.jsp
                 } else {
                     request.setAttribute("invalidLogin", "Wrong password. Try again.");
                     request.getServletContext().getRequestDispatcher("/auth/login.jsp").forward(request, response);
@@ -45,8 +46,7 @@ public class Login extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("title", "Login");
         request.getServletContext().getRequestDispatcher("/auth/login.jsp").forward(request, response);
-
-
     }
 }

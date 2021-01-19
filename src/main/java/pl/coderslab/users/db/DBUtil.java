@@ -15,6 +15,8 @@ public class DBUtil {
     private static final String GET_BY_ID = "SELECT * FROM tableName where user_id = ?";
     private static final String GET_ALL = "SELECT * FROM tableName";
     private static final String GET_ID = "SELECT * FROM tableName WHERE user_id = ?";
+    private static final String GET_BY_USERNAME = "SELECT * FROM tableName WHERE user_name = ?";
+    private static final String GET_BY_EMAIL = "SELECT * FROM tableName WHERE user_email = ?";
     private static DataSource dataSource;
 
     public static Connection getConnection() throws SQLException {
@@ -50,6 +52,32 @@ public class DBUtil {
         try {
             PreparedStatement statement = conn.prepareStatement(GET_BY_ID.replace("tableName", tableName));
             statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+
+    }
+
+    public static ResultSet getByUsername(Connection conn, String tableName, String userName) {
+        ResultSet resultSet = null;
+        try {
+            PreparedStatement statement = conn.prepareStatement(GET_BY_USERNAME.replace("tableName", tableName));
+            statement.setString(1, userName);
+            resultSet = statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+
+    }
+
+    public static ResultSet getByEmail(Connection conn, String tableName, String email) {
+        ResultSet resultSet = null;
+        try {
+            PreparedStatement statement = conn.prepareStatement(GET_BY_EMAIL.replace("tableName", tableName));
+            statement.setString(1, email);
             resultSet = statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();

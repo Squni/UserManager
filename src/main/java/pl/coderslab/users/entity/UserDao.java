@@ -47,6 +47,32 @@ public class UserDao {
         }
     }
 
+    public boolean emailExists(String email) {
+        try (Connection conn = DBUtil.getConnection(); ResultSet rs = DBUtil.getByEmail(conn, "users", email)) {
+            if (rs == null) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean usernameExists(String userName) {
+        try (Connection conn = DBUtil.getConnection(); ResultSet rs = DBUtil.getByUsername(conn, "users", userName)) {
+            if (rs == null) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private User[] addToArray(User u, User[] users) {
 
         User[] tmpUsers = Arrays.copyOf(users, users.length + 1);

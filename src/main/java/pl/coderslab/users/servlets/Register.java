@@ -14,26 +14,28 @@ public class Register extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String passwordConf = request.getParameter("passwordConf");
-        boolean created = false;
+        boolean create = true;
 
-        if (!password.equals(passwordConf) || password == null) {
+        if (EditUser.emailInUse(email)) {
+            request.setAttribute("notCreate", "Email already in use.");
+            create = false;
+        } else if (EditUser.nameInUse(userName)) {
+            request.setAttribute("notCreate", "Username already in use.");
+            create = false;
+        } else if (!password.equals(passwordConf)) {
             request.setAttribute("notCreate", "Password doesn't match.");
-        } else {
-            String check = AddUser.doExists(userName, email);
-            if (!check.equals("")) {
-                request.setAttribute("notCreate", check + " already in use.");
-            } else {
-                created = true;
-                AddUser.createUser(userName, email, password);
-                response.sendRedirect("/login");
-            }
+            create = false;
         }
-        if (!created) {
+        if (create) {
+            AddUser.createUser(email, userName, password);
+            response.sendRedirect("/login");
+        } else {
             request.getServletContext().getRequestDispatcher("/auth/register.jsp").forward(request, response);
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("title", "Register");
         request.getServletContext().getRequestDispatcher("/auth/register.jsp").forward(request, response);
     }
 }

@@ -90,6 +90,23 @@
                 </div>
             </div>
             <!-- End of Container Fluid -->
+            <div class="card-body">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Id</th>
+                        <td>${showUser.id}</td>
+                    </tr>
+                    <tr>
+                        <th>User name</th>
+                        <td>${showUser.userName}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>${showUser.email}</td>
+                    </tr>
+
+                </table>
+            </div>
         </div>
         <!-- End of Main Content -->
 
